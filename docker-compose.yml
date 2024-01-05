@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  database:
+    container_name: pg-container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  my-api:
+    container_name: api-container
+    image: my-api-image
+    ports:
+      - "80:80"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://root:root@database:5432/test_db
+    networks:
+      - my-network
+
+networks:
+  my-network:
